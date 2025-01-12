@@ -1,50 +1,76 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-const API_URL = "http://localhost:5000";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './App.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState("");
+  const [task, setTask] = useState("");
+  const [error, setError] = useState("");
 
-  const fetchTasks = async () => {
-    const response = await axios.get(`${API_URL}/tasks`);
-    setTasks(response.data);
-  };
-
-  const createTask = async () => {
-    if (!title.trim()) {
-      alert("Task title cannot be empty");
-      return;
-    }
-    try {
-      await axios.post(`${API_URL}/tasks`, { title });
-      setTitle("");
-      fetchTasks();
-    } catch (err) {
-      console.error("Error in createTask:", err.message);
-    }
-  };
-  
-
+  // Fetch tasks from the backend when the app loads
   useEffect(() => {
     fetchTasks();
   }, []);
 
+  // Function to fetch tasks from the server
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/tasks');
+      setTasks(response.data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  };
+
+  // Function to handle form submission (add a task)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!task) {
+      setError("Task cannot be empty.");
+      return;
+    }
+    try {
+      await axios.post('http://localhost:5000/tasks', { task });
+      fetchTasks(); // Refresh tasks after adding a new one
+      setTask("");  // Clear the input field
+      setError(""); // Clear error message
+    } catch (error) {
+      setError("Error adding task. Please try again.");
+      console.error('Error creating task:', error);
+    }
+  };
+
   return (
     <div className="App">
-      <h1>Taskify Pro</h1>
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="New Task"
-      />
-      <button onClick={createTask}>Add Task</button>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task._id}>{task.title}</li>
-        ))}
-      </ul>
+      <header className="App-header">
+        <h1>Taskify - Task Management</h1>
+        <form onSubmit={handleSubmit} className="task-form">
+          <input 
+            type="text" 
+            value={task} 
+            onChange={(e) => setTask(e.target.value)} 
+            placeholder="Add a new task" 
+            className="task-input"
+          />
+          <button type="submit" className="task-btn">Add Task</button>
+          {error && <p className="error-message">{error}</p>}
+        </form>
+      </header>
+
+      <div className="tasks-container">
+        <h2>Your Tasks</h2>
+        {tasks.length === 0 ? (
+          <p>No tasks added yet!</p>
+        ) : (
+          <ul className="task-list">
+            {tasks.map((taskItem, index) => (
+              <li key={index} className="task-item">
+                {taskItem.task}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
