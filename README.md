@@ -254,28 +254,6 @@ NODE_ENV=production npm start
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📝 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 👨‍💻 Author
-
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-
-## 🙏 Acknowledgments
-
-- React team for the amazing framework
-- Express.js community
-- MongoDB for the database solution
-- All open-source contributors
-
-## 📸 Screenshots
-
-_Add screenshots of your application here_
-
----
 
 ⭐ If you found this project helpful, please give it a star!
 
